@@ -18,7 +18,13 @@ function App() {
           throw new Error('Error al cargar el archivo de configuración')
         }
         const data = await response.json()
-        setConfigData(data)
+        
+        // Validate that data contains expected fields
+        if (data && typeof data === 'object') {
+          setConfigData(data)
+        } else {
+          throw new Error('Formato de configuración inválido')
+        }
         setShowTable(true)
       } catch (err) {
         setError(err.message)
@@ -71,14 +77,12 @@ function App() {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>Game Version</td>
-                        <td>{configData.gameVersion}</td>
-                      </tr>
-                      <tr>
-                        <td>Game State</td>
-                        <td>{configData.gameState}</td>
-                      </tr>
+                      {Object.entries(configData).map(([key, value]) => (
+                        <tr key={key}>
+                          <td>{key}</td>
+                          <td>{String(value)}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
