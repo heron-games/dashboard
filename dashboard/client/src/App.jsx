@@ -1,4 +1,35 @@
+import { useState } from 'react'
+
 function App() {
+  const [showTable, setShowTable] = useState(false)
+  const [configData, setConfigData] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  const handleButtonClick = async () => {
+    if (!showTable) {
+      setLoading(true)
+      setError(null)
+      try {
+        // Fetch from Firebase hosting + resources/config_data.json
+        // For local development, we'll use the public folder
+        const response = await fetch('/resources/config_data.json')
+        if (!response.ok) {
+          throw new Error('Error al cargar el archivo de configuración')
+        }
+        const data = await response.json()
+        setConfigData(data)
+        setShowTable(true)
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    } else {
+      setShowTable(false)
+    }
+  }
+
   return (
     <div className="container">
       <div className="row justify-content-center align-items-center min-vh-100">
@@ -15,6 +46,43 @@ function App() {
               <p className="text-light">
                 debes <strong>iniciar sesión</strong> para continuar
               </p>
+              
+              <button 
+                className="btn btn-primary mt-3"
+                onClick={handleButtonClick}
+                disabled={loading}
+              >
+                {loading ? 'Cargando...' : showTable ? 'Ocultar Configuración' : 'Mostrar Configuración'}
+              </button>
+
+              {error && (
+                <div className="alert alert-danger mt-3" role="alert">
+                  {error}
+                </div>
+              )}
+
+              {showTable && configData && (
+                <div className="mt-4">
+                  <table className="table table-dark table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">Propiedad</th>
+                        <th scope="col">Valor</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Game Version</td>
+                        <td>{configData.gameVersion}</td>
+                      </tr>
+                      <tr>
+                        <td>Game State</td>
+                        <td>{configData.gameState}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
         </div>
