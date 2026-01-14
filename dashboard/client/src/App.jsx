@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function App() {
   const [showTable, setShowTable] = useState(false)
@@ -8,6 +8,15 @@ function App() {
   const [editMode, setEditMode] = useState(false)
   const [editedData, setEditedData] = useState(null)
   const [saveSuccess, setSaveSuccess] = useState(false)
+
+  useEffect(() => {
+    // Cleanup timeout on unmount
+    return () => {
+      if (window.successTimeout) {
+        clearTimeout(window.successTimeout)
+      }
+    }
+  }, [])
 
   const handleButtonClick = async () => {
     if (!showTable) {
@@ -68,7 +77,10 @@ function App() {
     setSaveSuccess(true)
     
     // Hide success message after 3 seconds
-    setTimeout(() => {
+    if (window.successTimeout) {
+      clearTimeout(window.successTimeout)
+    }
+    window.successTimeout = setTimeout(() => {
       setSaveSuccess(false)
     }, 3000)
     
@@ -153,7 +165,7 @@ function App() {
                         <tr key={key}>
                           <td>{key}</td>
                           <td>
-                            {editMode ? (
+                            {editMode && editedData ? (
                               <input
                                 type="text"
                                 className="form-control form-control-sm bg-dark text-white border-secondary"
