@@ -6,7 +6,7 @@ function App() {
           <div className="card shadow-sm bg-dark text-white border-secondary">
             <div className="card-body p-5">
               <img 
-                src="/logo.svg" 
+                src="/hg_logo.png" 
                 alt="Heron Dashboard - Logo principal de la aplicación" 
                 className="logo-image mx-auto d-block"
                 role="img"
