@@ -5,9 +5,17 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8f9fa;
+  background-color: #222222;
 }
 
 #root {
   min-height: 100vh;
+}
+
+.logo-image {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
 }
